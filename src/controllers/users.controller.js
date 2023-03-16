@@ -1,22 +1,29 @@
 import { getConnection, queries, sql } from "../database";
+const jwt = require('jsonwebtoken');
 import { config } from "dotenv";
 
 //GET###############################################################################################################################################################################################
-export const getUserByEmail = async (req, res) => {
+export const authentication = async (req, res) => {
+  const {email, psw} = req.body;
   try {
     const pool = await getConnection();
-
     const result = await pool
       .request()
-      .input("email", req.query.email)
-      .input("psw", req.query.psw)
+      .input("email", sql.VarChar, email)
+      .input("psw", sql.VarChar, psw)
       .query(queries.getUserByEmail);
-    res.json(result.recordset);
+    var dataToken = result.recordset[0];
+    var token = generateAccessToken(dataToken);
+    console.log(token);
+    res.json(token);
   } catch (error) {
-    res.status(500);
-    res.send(error.message);
+    res.status(500).json({ msg: "Bad Request. Ingrese las credenciales correctas." });
   }
 };
+
+function generateAccessToken(payload) {
+  return jwt.sign(payload, process.env.JWT_SECRET);
+}
 
 export const getAllUsers = async (req, res) => {
   try {

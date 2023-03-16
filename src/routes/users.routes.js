@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { getAllUsers, getUserByEmail, updateGuideByID } from "../controllers/users.controller";
+import { authentication, getAllUsers, updateGuideByID } from "../controllers/users.controller";
 
 const router = Router()
 
 //GET###############################################################################################################################################################################################
-router.get("/users", getUserByEmail)
+router.post("/auth/login", authentication)
 router.get("/users/all", getAllUsers)
 
 router.put("/guide/:id_persona", updateGuideByID)

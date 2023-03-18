@@ -14,7 +14,6 @@ export const authentication = async (req, res) => {
       .query(queries.getUserByEmail);
     var dataToken = result.recordset[0];
     var token = generateAccessToken(dataToken);
-    console.log(token);
     res.json(token);
   } catch (error) {
     res.status(500).json({ msg: "Bad Request. Ingrese las credenciales correctas." });
